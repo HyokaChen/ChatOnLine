@@ -1,0 +1,7 @@
+E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.exe.config
+E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.exe
+E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.pdb
+E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\x86\Debug\System.Data.SQLite.dll
+E:\360Downloads\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.exe
+E:\360Downloads\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.pdb
+E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\x86\Debug\SQLite.Interop.dll

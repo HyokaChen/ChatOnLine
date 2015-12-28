@@ -1,0 +1,128 @@
+﻿<Window x:Class="ChatOnLine.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ChatOnLine"
+        mc:Ignorable="d" Loaded="Window_Loaded"
+        Title="MainWindow" Height="550" Width="680"  Closed="Window_Closed">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.3*"/>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+        <!--my information-->
+        <Grid Background="Chocolate">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition />
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Button ContentTemplate="{DynamicResource MyInfoDataTemplate}"/>
+            <Button Content="settings" Grid.Row="2" Style="{DynamicResource ChatButtonStyle}"/>
+        </Grid>
+        <!--list of people who are on line -->
+        <Grid x:Name="_listFriendGrid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition  Width="30"/>
+                </Grid.ColumnDefinitions>
+                <TextBox x:Name="_findTb" />
+                <Button x:Name="_findBtn" Grid.Column="1" Content="Find" Click="_findBtn_Click" 
+                        Style="{DynamicResource ChatButtonStyle}"/>
+            </Grid>
+            <ListBox x:Name="_listFriendListBox" Grid.Row="1" 
+                     ItemTemplate="{DynamicResource ListBoxItemDataTemplate}" 
+                     SelectionMode="Single" SelectionChanged="_listFriendListBox_SelectionChanged"
+                     MouseDoubleClick="_listFriendListBox_MouseDoubleClick" 
+                     Style="{DynamicResource FriendListBoxStyle}" 
+                     ItemContainerStyle="{DynamicResource FriendListBoxItemStyle}" >
+            </ListBox>
+        </Grid>
+        <!--when no people to chat with ,it is visible.-->
+        <Grid x:Name="_noChatGrid" Grid.Column="2" Background="#FFDEAD"  >
+            <TextBlock Grid.Column="2" VerticalAlignment="Center" TextAlignment="Center" Text="Chat with someone." />
+        </Grid>
+        <!--chat with people-->
+        <Grid x:Name="_chatGrid" Grid.Column="2" Background="Red"  Visibility="Hidden" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="0.2*"/>
+                <RowDefinition Height="0.8*"/>
+                <RowDefinition Height="0.2*"/>
+            </Grid.RowDefinitions>
+            <!--state bar-->
+            <StackPanel x:Name="_stateBar" Background="NavajoWhite" Orientation="Horizontal">
+                <Button x:Name="_backBtn" Content="Back" Width="50" Margin="0 0 5 0" Click="_backBtn_Click"
+                         Style="{DynamicResource ChatButtonStyle}"/>
+                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Margin="0 0 5 0" FontSize="15" Foreground="Black"/>
+                <TextBlock Text="{Binding State}" VerticalAlignment="Center" Margin="0 0 5 0" FontSize="15" Foreground="Black"/>
+            </StackPanel>
+            <!--chat and show message-->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ListBox x:Name="_friendSendLb" Background="White" ItemTemplate="{DynamicResource OtherSendDataTemplate}"
+                         ItemContainerStyle="{DynamicResource OtherSendListBoxItemStyle}"
+                         Style="{DynamicResource MessageShowListBoxStyle}">
+
+                </ListBox>
+                <ListBox x:Name="_youSendLb" Background="White" Grid.Column="1" ItemTemplate="{DynamicResource MyselfSendDataTemplate}"
+                         ItemContainerStyle="{DynamicResource ISendListBoxItemStyle}"
+                         Style="{DynamicResource MessageShowListBoxStyle}">
+
+                </ListBox>
+            </Grid>
+            <!--other function-->
+            <Grid Background="#FFEBCD" Grid.Row="2"/>
+            <!--input message-->
+            <Grid Background="#FFDEAD" Grid.Row="3">
+                <TextBox x:Name="_sendMseeageTb"/>
+            </Grid>
+            <!--send message-->
+            <StackPanel Background="#FFDEAD" Grid.Row="4" Orientation="Horizontal" FlowDirection="RightToLeft">
+                <Button x:Name="_sendBtn" Content="send" Width="50" Click="_sendBtn_Click"
+                        Style="{DynamicResource ChatButtonStyle}"/>
+            </StackPanel>
+        </Grid>
+        <!--Login-->
+        <Grid x:Name="_loginGrid"  Grid.ColumnSpan="3" Background="Chocolate">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Image Source="Resource/login.png" Grid.Column="1" Margin="0 10 0 10"/>
+            <Grid Grid.Row="1" Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition  Width="0.2*"/>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="0.3*"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="1">
+                    <TextBox x:Name="_userTb"  Height="30" Margin="0 0 10 0" Text="{Binding Path=UserId}"/>
+                    <!--UserId-->
+                    <TextBox  Height="30" Margin="0 0 10 0" Text="{Binding Path=Name}"/>
+                    <!--Name-->
+                    <local:win8ProcessBar x:Name="_loadProBar" Height="50" Visibility="Hidden"/>
+                    <!--<Label x:Name="testLabel" Height="50" />-->
+                </StackPanel>
+                <Button x:Name="_loginBtn" Grid.Column="2" Height="60" VerticalAlignment="Top" Content="Enter"
+                        Click="_loginBtn_Click" Style="{DynamicResource ChatButtonStyle}"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

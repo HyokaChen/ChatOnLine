@@ -1,0 +1,17 @@
+E:\360Downloads\ChatOnLine\ChatOnLine\bin\x86\Debug\ChatOnLine.exe.config
+E:\360Downloads\ChatOnLine\ChatOnLine\bin\x86\Debug\ChatOnLine.exe
+E:\360Downloads\ChatOnLine\ChatOnLine\bin\x86\Debug\ChatOnLine.pdb
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\MainWindow.g.cs
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\win8ProcessBar.g.cs
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\App.g.cs
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine_MarkupCompile.cache
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine_MarkupCompile.lref
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\App.baml
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\MainWindow.baml
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\win8ProcessBar.baml
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine.g.resources
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine.Properties.Resources.resources
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine.csproj.GenerateResource.Cache
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine.exe
+E:\360Downloads\ChatOnLine\ChatOnLine\obj\x86\Debug\ChatOnLine.pdb
