@@ -297,6 +297,64 @@ namespace ChatOnLine
         {
             _userTb.Text = string.Empty;
             _userTb.Focus();
+            //追踪鼠标滚轮事件，注意最后一个参数，防止已经被标记处理。
+            _friendSendLb.AddHandler(ListBox.MouseWheelEvent, new MouseWheelEventHandler(_friendSendLb_MouseWheel),true);
+            _youSendLb.AddHandler(ListBox.MouseWheelEvent, new MouseWheelEventHandler(_youSendLb_MouseWheel),true);
+        }
+
+        private void _youSendLb_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer _youSendLb_scroll = FindVisualChild<ScrollViewer>(_youSendLb);
+            ScrollViewer _friendSendLb_scroll = FindVisualChild<ScrollViewer>(_friendSendLb);
+            int d = e.Delta;
+            if (d > 0)
+            {
+                _youSendLb_scroll.LineUp();
+                _friendSendLb_scroll.LineUp();
+            }
+            if (d < 0)
+            {
+                _youSendLb_scroll.LineDown();
+                _friendSendLb_scroll.LineDown();
+            }
+            e.Handled= true;
+        }
+
+        private void _friendSendLb_MouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            ScrollViewer _youSendLb_scroll = FindVisualChild<ScrollViewer>(_youSendLb);
+            ScrollViewer _friendSendLb_scroll = FindVisualChild<ScrollViewer>(_friendSendLb);
+            int d = e.Delta;
+            if (d > 0)
+            {
+                _youSendLb_scroll.LineUp();
+                _friendSendLb_scroll.LineUp();
+            }
+            if (d < 0)
+            {
+                _youSendLb_scroll.LineDown();
+                _friendSendLb_scroll.LineDown();
+            }
+            e.Handled = true;
+        }
+
+
+        public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
+        {
+            if (obj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(obj, i);
+                    if (child != null && child is T)
+                    {
+                        return (T)child;
+                    }
+                    T childItem = FindVisualChild<T>(child);
+                    if (childItem != null) return childItem;
+                }
+            }
+            return null;
         }
 
         //窗体关闭
@@ -529,7 +587,6 @@ namespace ChatOnLine
         {
             _chatGrid.Visibility = Visibility.Hidden;
         }
-        
 
     }
 }
