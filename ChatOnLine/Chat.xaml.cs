@@ -14,18 +14,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace ChatOnLine
 {
     /// <summary>
-    /// MainWindow.xaml 的交互逻辑
+    /// Chat.xaml 的交互逻辑
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Chat : Window
     {
-        //delegate
         private delegate void makeUIUpdateDelegate(User user);
         private delegate void getInfoFromServerDelegate(NetworkStream stream);
         private delegate void initChatContentContainerlist(int count);
@@ -35,30 +33,30 @@ namespace ChatOnLine
         private IPAddress _localIPAddr;
         private int _tcp_client_port = 0;//save port for tcpclient.
         private ObservableCollection<User> remoteUserCollection;//save all friend.
-        private List<ChatContentCollectionList> friendChatContentCollectionList;//save friends' message.
-        private List<ChatContentCollectionList> myChatContentCollectionList;//save my message.
+        private List<ChatContentCollectionList> chatContentCollectionList;//save message.
         private User _localUser;
         private User _currentSelectUser;
         private string _friendId;//friend who want to query.
         private object locker;
         private static readonly string notifyColor = @"#d2691e";
-        private static readonly string hideColor = @"#FFFFFF";
         private static readonly string restoreColor = @"#F4A460";
-        private static readonly string visibleColor = @"#000000";
         private static readonly string onLine = "在线";
         private static readonly string offLine = "离线";
+
+
+        public ChatContent chat1 { get; set; }
+        public ChatContent chat2 { get; set; }
         //tcp
         private TcpClient tcp_client;
         private NetworkStream tcp_stream;
         //udp
         private UdpClient udp_background;
         private Thread udp_back_recvTh;
-        public MainWindow()
+        public Chat()
         {
             _localUser = new User();
             remoteUserCollection = new ObservableCollection<User>();
-            friendChatContentCollectionList = new List<ChatContentCollectionList>();
-            myChatContentCollectionList = new List<ChatContentCollectionList>();
+            chatContentCollectionList = new List<ChatContentCollectionList>();
             locker = new object();
             _currentSelectUser = new User();
             InitializeComponent();
@@ -67,6 +65,7 @@ namespace ChatOnLine
             _stateBar.DataContext = _currentSelectUser;
             _listFriendListBox.ItemsSource = remoteUserCollection;
         }
+
         //登录
         private void _loginBtn_Click(object sender, RoutedEventArgs e)
         {
@@ -159,7 +158,7 @@ namespace ChatOnLine
         private void getInitInfoFromServer(NetworkStream stream)
         {
             //add local user to collection,and show its information.
-            _localUser.State =onLine;
+            _localUser.State = onLine;
             _localUser.ImgSource = "Resource/me.png";
             _localUser.NotifyColor = restoreColor;
             Dispatcher.BeginInvoke(DispatcherPriority.Send, new makeUIUpdateDelegate(makeUIUpdate), _localUser);
@@ -203,18 +202,12 @@ namespace ChatOnLine
                     if (u.Count() > 0)
                     {
                         u.ElementAt(0).State = user.State;//update user's state.
+                        (_stateBar.Children[2] as TextBlock).Text = user.State;//update state bar.
                     }
                     else
                     {
                         remoteUserCollection.Add(user);
-                        friendChatContentCollectionList.Add(
-                        new ChatContentCollectionList()
-                        {
-                            ID = user.UserId,
-                            ChatContentCollection = new ObservableCollection<ChatContent>()
-                        }
-                        );
-                        myChatContentCollectionList.Add(
+                        chatContentCollectionList.Add(
                             new ChatContentCollectionList()
                             {
                                 ID = user.UserId,
@@ -280,13 +273,14 @@ namespace ChatOnLine
                 _remoteUser.Name = peer_meg[i + 1].Substring(0, peer_meg[i + 1].Length - 1);
                 if (peer_meg[i + 1].Substring(peer_meg[i + 1].Length - 1) == "!")
                 {
-                    _remoteUser.State =offLine;
+                    _remoteUser.State = offLine;
                 }
                 else
                 {
-                    _remoteUser.State =onLine;
+                    _remoteUser.State = onLine;
                 }
                 _remoteUser.ImgSource = "Resource/someone.png";
+                
                 Dispatcher.BeginInvoke(DispatcherPriority.Send, new makeUIUpdateDelegate(makeUIUpdate), _remoteUser);
 
             }
@@ -297,64 +291,6 @@ namespace ChatOnLine
         {
             _userTb.Text = string.Empty;
             _userTb.Focus();
-            //追踪鼠标滚轮事件，注意最后一个参数，防止已经被标记处理。
-            _friendSendLb.AddHandler(ListBox.MouseWheelEvent, new MouseWheelEventHandler(_friendSendLb_MouseWheel),true);
-            _youSendLb.AddHandler(ListBox.MouseWheelEvent, new MouseWheelEventHandler(_youSendLb_MouseWheel),true);
-        }
-
-        private void _youSendLb_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer _youSendLb_scroll = FindVisualChild<ScrollViewer>(_youSendLb);
-            ScrollViewer _friendSendLb_scroll = FindVisualChild<ScrollViewer>(_friendSendLb);
-            int d = e.Delta;
-            if (d > 0)
-            {
-                _youSendLb_scroll.LineUp();
-                _friendSendLb_scroll.LineUp();
-            }
-            if (d < 0)
-            {
-                _youSendLb_scroll.LineDown();
-                _friendSendLb_scroll.LineDown();
-            }
-            e.Handled= true;
-        }
-
-        private void _friendSendLb_MouseWheel(object sender, MouseWheelEventArgs e)
-        {
-            ScrollViewer _youSendLb_scroll = FindVisualChild<ScrollViewer>(_youSendLb);
-            ScrollViewer _friendSendLb_scroll = FindVisualChild<ScrollViewer>(_friendSendLb);
-            int d = e.Delta;
-            if (d > 0)
-            {
-                _youSendLb_scroll.LineUp();
-                _friendSendLb_scroll.LineUp();
-            }
-            if (d < 0)
-            {
-                _youSendLb_scroll.LineDown();
-                _friendSendLb_scroll.LineDown();
-            }
-            e.Handled = true;
-        }
-
-
-        public static T FindVisualChild<T>(DependencyObject obj) where T : DependencyObject
-        {
-            if (obj != null)
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(obj); i++)
-                {
-                    DependencyObject child = VisualTreeHelper.GetChild(obj, i);
-                    if (child != null && child is T)
-                    {
-                        return (T)child;
-                    }
-                    T childItem = FindVisualChild<T>(child);
-                    if (childItem != null) return childItem;
-                }
-            }
-            return null;
         }
 
         //窗体关闭
@@ -379,7 +315,7 @@ namespace ChatOnLine
                 cf.Save(ConfigurationSaveMode.Modified);
             }
         }
-        
+
         //发送消息告诉服务器，自己已经下线
         private void tellToServerOffline(NetworkStream stream)
         {
@@ -430,11 +366,11 @@ namespace ChatOnLine
                     _remoteUser.Name = peer_meg[i + 1].Substring(0, peer_meg[i + 1].Length - 1);
                     if (flag == "!")
                     {
-                        _remoteUser.State =offLine;
+                        _remoteUser.State = offLine;
                     }
                     else
                     {
-                        _remoteUser.State =onLine;
+                        _remoteUser.State = onLine;
                     }
                     _remoteUser.ImgSource = "Resource/someone.png";
                     _remoteUser.NotifyColor = @"#ffff00";
@@ -454,36 +390,25 @@ namespace ChatOnLine
         {
             string[] msg = temp.Split('|');//0:userid 1:msg 
             int userid = int.Parse(msg[0]);
-            //add to friendChatCollection
+
+
+            //add to ChatContentCollection, but it is belong to people which he send to me.
             ChatContent f = new ChatContent()
             {
                 ImgSource = @"Resource/someone.png",
-                FontColor = visibleColor,
-                Content = msg[1]
+                Content = msg[1],
+                IsSelf=false
             };
-            var vf = from b in friendChatContentCollectionList
+            var vf = from b in chatContentCollectionList
                      where (b.ID == userid)
                      select b;
             vf.ElementAt(0).ChatContentCollection.Add(f);
-            _friendSendLb.ScrollIntoView(f);
+            _sendLb.ScrollIntoView(f);
             //notify you to read message.
             var notifyUser = from b in remoteUserCollection
                              where (b.UserId == userid)
                              select b;
             notifyUser.ElementAt(0).NotifyColor = notifyColor;
-
-            //add to yourChatCollection
-            ChatContent m = new ChatContent()
-            {
-                ImgSource = @"Resource/hidesomeone.png",
-                FontColor = hideColor,
-                Content = msg[1]
-            };
-            var vm = from b in myChatContentCollectionList
-                     where (b.ID == userid)
-                     select b;
-            vm.ElementAt(0).ChatContentCollection.Add(m);
-            _youSendLb.ScrollIntoView(m);
         }
 
         //改变选中好友列表中的某个
@@ -497,20 +422,18 @@ namespace ChatOnLine
                 (_stateBar.Children[2] as TextBlock).Text = _currentSelectUser.State;
                 _currentSelectUser.NotifyColor = restoreColor;
                 //update listbox's ItemsSource
-                var vf = from b in friendChatContentCollectionList
+                var vf = from b in chatContentCollectionList
                          where (b.ID == _currentSelectUser.UserId)
                          select b;
-                _friendSendLb.ItemsSource = vf.ElementAt(0).ChatContentCollection;
-                var vm = from b in myChatContentCollectionList
-                         where (b.ID == _currentSelectUser.UserId)
-                         select b;
-                _youSendLb.ItemsSource = vm.ElementAt(0).ChatContentCollection;
+                _sendLb.ItemsSource = vf.ElementAt(0).ChatContentCollection;
+
             }
             else
             {
                 _chatGrid.Visibility = Visibility.Hidden;
             }
         }
+
         //双击好友列表中的某个
         private void _listFriendListBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
@@ -522,14 +445,10 @@ namespace ChatOnLine
                 (_stateBar.Children[2] as TextBlock).Text = _currentSelectUser.State;
                 _currentSelectUser.NotifyColor = restoreColor;
 
-                var vf = from b in friendChatContentCollectionList
+                var vf = from b in chatContentCollectionList
                          where (b.ID == _currentSelectUser.UserId)
                          select b;
-                _friendSendLb.ItemsSource = vf.ElementAt(0).ChatContentCollection;
-                var vm = from b in myChatContentCollectionList
-                         where (b.ID == _currentSelectUser.UserId)
-                         select b;
-                _youSendLb.ItemsSource = vm.ElementAt(0).ChatContentCollection;
+                _sendLb.ItemsSource = vf.ElementAt(0).ChatContentCollection;
             }
             else
             {
@@ -541,10 +460,10 @@ namespace ChatOnLine
         private void _sendBtn_Click(object sender, RoutedEventArgs e)
         {
             //_currentSelectUser
-            if (_currentSelectUser.State !=offLine)
+            if (_currentSelectUser.State != offLine)
             {
                 string text = "s" + _localUser.UserId.ToString() + "|" + _currentSelectUser.UserId.ToString()
-								+ "|" + _sendMseeageTb.Text;
+                                + "|" + _sendMseeageTb.Text;
                 Byte[] sendData = new Byte[text.Length];
                 sendData = Encoding.Default.GetBytes(text);
                 tcp_stream.BeginWrite(sendData, 0, sendData.Length, new AsyncCallback(
@@ -554,31 +473,18 @@ namespace ChatOnLine
                         //MessageBox.Show("Send Ok!");
                     }
                     ), (object)string.Empty);
-                //add to friendChatCollection
+                //add to ChatContentCollection, but it is belong to me which I chat with.
                 ChatContent m = new ChatContent()
                 {
                     ImgSource = @"Resource/me.png",
-                    FontColor = visibleColor,
-                    Content = _sendMseeageTb.Text
+                    Content = _sendMseeageTb.Text,
+                    IsSelf=true
                 };
-                var vm = from b in myChatContentCollectionList
+                var vm = from b in chatContentCollectionList
                          where (b.ID == _currentSelectUser.UserId)
                          select b;
                 vm.ElementAt(0).ChatContentCollection.Add(m);
-                _youSendLb.ScrollIntoView(m);
-                
-                //add to yourChatCollection
-                ChatContent f = new ChatContent()
-                {
-                    ImgSource = @"Resource/hideme.png",
-                    FontColor = hideColor,
-                    Content = _sendMseeageTb.Text
-                };
-                var vf = from b in friendChatContentCollectionList
-                         where (b.ID == _currentSelectUser.UserId)
-                         select b;
-                vf.ElementAt(0).ChatContentCollection.Add(f);
-                _friendSendLb.ScrollIntoView(f);
+                _sendLb.ScrollIntoView(m);
                 _sendMseeageTb.Text = string.Empty;
             }
         }

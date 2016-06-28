@@ -80,6 +80,7 @@ namespace ChatOnLine
             }
         }
 
+     
     }
 
     public class ChatContent : DataService
@@ -106,17 +107,15 @@ namespace ChatOnLine
             }
         }
 
-        private string _fontColor;
-
-        public string FontColor
+        private bool _isSelf;
+        public bool IsSelf
         {
-            get { return _fontColor; }
+            get { return _isSelf; }
             set
             {
-                _fontColor = value;
+                _isSelf = value;
             }
         }
-
     }
 
     public class ChatContentCollectionList : DataService

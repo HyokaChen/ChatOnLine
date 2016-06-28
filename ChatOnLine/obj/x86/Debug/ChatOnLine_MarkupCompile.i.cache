@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\课程设计\ChatOnLine\ChatOnLine\obj\x86\Debug\
+D:\CJH\CJH\ChatOnLine\ChatOnLine\obj\x86\Debug\
 ChatOnLine
 none
 false
 DEBUG;TRACE
-E:\课程设计\ChatOnLine\ChatOnLine\App.xaml
-2209685141
+D:\CJH\CJH\ChatOnLine\ChatOnLine\App.xaml
+2985219478
 
-727752564
+81829950619
 12-219795707
-MainWindow.xaml;win8ProcessBar.xaml;
+Chat.xaml;win8ProcessBar.xaml;
 
-True
+False
 

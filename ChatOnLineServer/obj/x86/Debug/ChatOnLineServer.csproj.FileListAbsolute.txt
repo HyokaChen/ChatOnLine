@@ -11,3 +11,9 @@ E:\课程设计\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.exe
 E:\课程设计\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.pdb
 E:\课程设计\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.exe
 E:\课程设计\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.pdb
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\bin\x86\Debug\SQLite.Interop.dll
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.exe.config
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.exe
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\bin\x86\Debug\ChatOnLineServer.pdb
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.exe
+D:\CJH\CJH\ChatOnLine\ChatOnLineServer\obj\x86\Debug\ChatOnLineServer.pdb

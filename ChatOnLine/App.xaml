@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ChatOnLine"
              xmlns:Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" x:Class="ChatOnLine.App"
-             StartupUri="MainWindow.xaml">
+             StartupUri="Chat.xaml">
     <Application.Resources>
         <DataTemplate x:Key="ListBoxItemDataTemplate">
             <StackPanel Orientation="Horizontal" Background="{Binding NotifyColor}">
@@ -18,11 +18,10 @@
                 <Image Source="Resource/me.png"/>
             </Grid>
         </DataTemplate>
-        <Style x:Key="OtherSendListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+        <Style x:Key="SendMessageListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
             <Setter Property="Background" Value="White"/>
-            <Setter Property="HorizontalContentAlignment" Value="Left"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="2,0,0,0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
@@ -30,14 +29,6 @@
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                         <ControlTemplate.Triggers>
-                            <!--<Trigger Property="IsSelected" Value="true">
-                                <Setter Property="Background" TargetName="Bd" Value="White"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="false">
-                                <Setter Property="Background" TargetName="Bd" Value="White"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Trigger>-->
                             <Trigger Property="IsEnabled" Value="false">
                                 <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
                             </Trigger>
@@ -46,55 +37,23 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="ISendListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="HorizontalContentAlignment" Value="Right"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="2,0,0,0"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <!--<Trigger Property="IsSelected" Value="true">
-                                <Setter Property="Background" TargetName="Bd" Value="White"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Trigger>
-                            <Trigger Property="IsSelected" Value="false">
-                                <Setter Property="Background" TargetName="Bd" Value="White"/>
-                                <Setter Property="Foreground" Value="Black"/>
-                            </Trigger>-->
-                            <Trigger Property="IsEnabled" Value="false">
-                           <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
         <DataTemplate x:Key="OtherSendDataTemplate" >
-            <StackPanel Orientation="Horizontal" Margin="0 5 0 5">
-                <Image Source="{Binding ImgSource}"/>
-                <TextBlock Text="{Binding Content}" Width="150" TextAlignment="Left"
-        			HorizontalAlignment="Center" TextWrapping="Wrap"
-        			Foreground="{Binding FontColor}"/>
-                <!--<Image Source="Resource/someone.png"/>
-                <TextBlock Text="hello" Width="150" TextAlignment="Left"
-                           HorizontalAlignment="Center" TextWrapping="Wrap"/>-->
-            </StackPanel>
+            <Border CornerRadius="10" Background="Yellow" HorizontalAlignment="Left" Margin="0 0 0 10">
+                <StackPanel Orientation="Horizontal" Margin="5">
+                        <Image Source="{Binding ImgSource}" Margin="0 0 3 0"/>
+                        <TextBlock Text="{Binding Content}" MaxWidth="160" 
+        			        TextWrapping="Wrap" />
+                    </StackPanel>
+            </Border>
         </DataTemplate>
         <DataTemplate x:Key="MyselfSendDataTemplate">
-            <StackPanel Orientation="Horizontal" Margin="0 5 0 5" >
-                <TextBlock Text="{Binding Content}" Width="150" TextAlignment="Right"
-        			Foreground="{Binding FontColor}"
-        			HorizontalAlignment="Center" TextWrapping="Wrap"/>
-                <Image Source="{Binding ImgSource}"/>
-                <!--<TextBlock Text="nihaoa" Width="150" TextAlignment="Right"
-                           HorizontalAlignment="Center" TextWrapping="Wrap"/>
-                <Image Source="Resource/me.png"/>-->
-            </StackPanel>
+            <Border CornerRadius="10" Background="Green" HorizontalAlignment="Right" Margin="0 0 0 10">
+                <StackPanel Orientation="Horizontal" Margin="5" >
+                    <TextBlock Text="{Binding Content}" MaxWidth="160" 
+        			    TextWrapping="Wrap" Margin="0 0 3 0"/>
+                    <Image Source="{Binding ImgSource}" />
+                </StackPanel>
+            </Border>
         </DataTemplate>
         <SolidColorBrush x:Key="ListBorder" Color="Transparent"/>
         <Style x:Key="MessageShowListBoxStyle" TargetType="{x:Type ListBox}">
@@ -105,7 +64,7 @@
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
             <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
             <Setter Property="ScrollViewer.CanContentScroll" Value="true"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
             <Setter Property="SelectionMode" Value="Single" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -229,6 +188,12 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <ItemsPanelTemplate x:Key="MessageItemsPanelTemplate">
+            <VirtualizingStackPanel HorizontalAlignment="Stretch"
+                                    IsItemsHost="True">
+                
+            </VirtualizingStackPanel>
+        </ItemsPanelTemplate>
 
     </Application.Resources>
 </Application>
