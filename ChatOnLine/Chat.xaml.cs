@@ -43,9 +43,6 @@ namespace ChatOnLine
         private static readonly string onLine = "在线";
         private static readonly string offLine = "离线";
 
-
-        public ChatContent chat1 { get; set; }
-        public ChatContent chat2 { get; set; }
         //tcp
         private TcpClient tcp_client;
         private NetworkStream tcp_stream;

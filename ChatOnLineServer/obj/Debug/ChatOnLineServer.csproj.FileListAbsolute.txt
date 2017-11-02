@@ -1,7 +1,0 @@
-E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\Debug\ChatOnLineServer.exe.config
-E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\Debug\ChatOnLineServer.exe
-E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\Debug\ChatOnLineServer.pdb
-E:\360Downloads\ChatOnLine\ChatOnLineServer\bin\Debug\System.Data.SQLite.dll
-E:\360Downloads\ChatOnLine\ChatOnLineServer\obj\Debug\ChatOnLineServer.csprojResolveAssemblyReference.cache
-E:\360Downloads\ChatOnLine\ChatOnLineServer\obj\Debug\ChatOnLineServer.exe
-E:\360Downloads\ChatOnLine\ChatOnLineServer\obj\Debug\ChatOnLineServer.pdb

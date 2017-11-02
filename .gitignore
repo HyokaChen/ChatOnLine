@@ -1,0 +1,9 @@
+# obj & bin
+ChatOnLine/bin/
+ChatOnLine/obj/
+ChatOnline.Core/bin/
+ChatOnline.Core/obj/
+ChatOnLineServer/bin/
+ChatOnLineServer/obj/
+# .vs
+.vs/
