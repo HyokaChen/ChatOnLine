@@ -141,7 +141,7 @@ namespace ChatOnLineServer
             string username = string.Empty;
             string friendStr = strInfo[1];
             UdpClient localudp = new UdpClient(new IPEndPoint(IPAddress.Parse(ipaddr), 12999));
-            if (dataService.FindIPEndPoint(strInfo[1], out ipendpoint))//friend on line
+            if (dataService.FindIPEndPoint(int.Parse(strInfo[1]), out ipendpoint))//friend on line
             {
                 lock (portLocker)
                 {
@@ -167,16 +167,15 @@ namespace ChatOnLineServer
         {
             string userid = dataStr.Split('|')[0].Substring(1);
             string name = string.Empty;
-            dataService.FindUsers(userid, out name);
+            dataService.FindUsers(int.Parse(userid), out name);
             dataStr = dataStr.Split('|')[0].Substring(1) + "|" + name + "!";//structure string.
             lock (locker)
             {
-                dataService.ExitUser(userid);
+                dataService.ExitUser(int.Parse(userid));
                 Console.WriteLine("exit user {0}", dataStr);
             }
-            List<int> userList = new List<int>();
-            string sql = "SELECT userid from frienduserinfo WHERE friendid=";
-            dataService.FindFriend(sql, userid, userList, "userid");
+
+            List<int> userList = dataService.FindFriendUserinfoByFriendId(userid);
             SendUserInfoToFriend(userList, dataStr);
         }
 
@@ -186,12 +185,12 @@ namespace ChatOnLineServer
             string ipendpoint = string.Empty;
             string friendname = string.Empty;
             string[] temp = dataStr.Split('|');//0:userid 1:friendid 2:ipendpoint
-            string userid = temp[0].Substring(1);
-            string friendid = temp[1];
+            int userid = int.Parse(temp[0].Substring(1));
+            int friendid = int.Parse(temp[1]);
             bool isFriendOnLine = false;
             if (dataService.FindUsers(friendid, out friendname))
             {
-                Byte[] data = new Byte[friendid.Length + friendname.Length + 2];
+                Byte[] data = new Byte[friendid.ToString().Length + friendname.Length + 2];
                 if (dataService.FindIPEndPoint(friendid))//friend on line
                 {
                     isFriendOnLine = true;
@@ -222,7 +221,7 @@ namespace ChatOnLineServer
                 //synchronous to friend.tell he that I have been your friend.
                 List<int> list = new List<int>
                 {
-                    int.Parse(friendid)
+                    friendid
                 };
                 dataService.FindUsers(userid, out string name);
                 dataStr = userid + "|" + name + "`";
@@ -296,15 +295,15 @@ namespace ChatOnLineServer
             string[] strInfo = dataStr.Split('|');//0:userid  1:name + ` or !
             string ipendpoint = string.Empty;
             string username = string.Empty;
-            string friendStr = "";
+            //string friendStr = "";
 
             UdpClient localudp = new UdpClient(new IPEndPoint(IPAddress.Parse(ipaddr), 12999));
-            foreach (var li in list)
+            foreach (var item in list)
             {
-                friendStr = li.ToString();
-                if (dataService.FindIPEndPoint(friendStr))
+                //friendStr = li.ToString();
+                if (dataService.FindIPEndPoint(item))
                 {
-                    dataService.FindIPEndPoint(friendStr, out ipendpoint);
+                    dataService.FindIPEndPoint(item, out ipendpoint);
                     lock (portLocker)
                     {
                         IPEndPoint remoteIpEndPoint = new IPEndPoint(
@@ -357,20 +356,20 @@ namespace ChatOnLineServer
         {
             string ipendpoint = string.Empty;
             string friendname = string.Empty;
-            string friendidStr = "";
+            //int friendidStr = "";
             foreach (var friendid in list)
             {
-                friendidStr = friendid.ToString();
-                if (dataService.FindUsers(friendidStr, out friendname))
+                //friendidStr = friendid.ToString();
+                if (dataService.FindUsers(friendid, out friendname))
                 {
-                    Byte[] data = new Byte[friendidStr.Length + friendname.Length + 2];
-                    if (dataService.FindIPEndPoint(friendidStr))//friend on line.
+                    Byte[] data = new Byte[friendid.ToString().Length + friendname.Length + 2];
+                    if (dataService.FindIPEndPoint(friendid))//friend on line.
                     {
-                        data = Encoding.Default.GetBytes(friendidStr + "|" + friendname + "`|");
+                        data = Encoding.Default.GetBytes(friendid + "|" + friendname + "`|");
                     }
                     else//friend off line.
                     {
-                        data = Encoding.Default.GetBytes(friendidStr + "|" + friendname + "!|");
+                        data = Encoding.Default.GetBytes(friendid + "|" + friendname + "!|");
                     }
                     stream.Write(data, 0, data.Length);
 
