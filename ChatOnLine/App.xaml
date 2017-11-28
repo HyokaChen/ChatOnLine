@@ -184,8 +184,8 @@
       <VirtualizingStackPanel HorizontalAlignment="Stretch" IsItemsHost="True">
       </VirtualizingStackPanel>
     </ItemsPanelTemplate>
-    <ResourceDictionary>
+    <!--<ResourceDictionary>
       <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" xmlns:vm="clr-namespace:ChatOnLine.ViewModel" />
-    </ResourceDictionary>
+    </ResourceDictionary>-->
   </Application.Resources>
 </Application>

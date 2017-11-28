@@ -68,7 +68,7 @@ namespace ChatOnLineServer
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
 
-            //create temp table for IPEndPoint
+            //create temp table for IPEndPoint //ip2port
             sql = "create table if not exists ipEndPoint (userid int primary key not null,ipendpoint varchar(30))";
             command = new SQLiteCommand(sql, m_dbConnection);
             command.ExecuteNonQuery();
@@ -79,18 +79,25 @@ namespace ChatOnLineServer
         {
             string sql = @"insert into userinfo (userid, name, password) values ( @userid, @name, @password)";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-            command.Parameters.Add(new SQLiteParameter("@userid", DbType.Int32)
-            {
-                Value = userid
-            });
-            command.Parameters.Add(new SQLiteParameter("@name", DbType.AnsiString)
-            {
-                Value = name
-            });
-            command.Parameters.Add(new SQLiteParameter("@password", DbType.AnsiString)
-            {
-                Value = password
-            });
+            //command.Parameters.Add(new SQLiteParameter("@userid", DbType.Int32)
+            //{
+            //    Value = userid
+            //});
+            //command.Parameters.Add(new SQLiteParameter("@name", DbType.AnsiString)
+            //{
+            //    Value = name
+            //});
+            //command.Parameters.Add(new SQLiteParameter("@password", DbType.AnsiString)
+            //{
+            //    Value = password
+            //});
+            SQLiteParameter[] parames ={
+                new SQLiteParameter("@userid",DbType.Int32){Value= userid},
+                new SQLiteParameter("@name",DbType.AnsiString){Value = name},
+                new SQLiteParameter("@password",DbType.AnsiString){Value=password}
+            };
+            command.Parameters.AddRange(parames);
+
             command.ExecuteNonQuery();
         }
 
@@ -100,39 +107,52 @@ namespace ChatOnLineServer
             string ipendpoint = $"{ip}:{port}";
             string sql = @"insert into ipEndPoint (userid, ipendpoint) values (@userid, @ipendpoint)";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-            command.Parameters.Add(new SQLiteParameter("@userid", DbType.Int32)
-            {
-                Value = userid
-            });
-            command.Parameters.Add(new SQLiteParameter("@ipendpoint", DbType.AnsiString)
-            {
-                Value = ipendpoint
-            });
+            //command.Parameters.Add(new SQLiteParameter("@userid", DbType.Int32)
+            //{
+            //    Value = userid
+            //});
+            //command.Parameters.Add(new SQLiteParameter("@ipendpoint", DbType.AnsiString)
+            //{
+            //    Value = ipendpoint
+            //});
+            SQLiteParameter[] parames ={
+                new SQLiteParameter("@userid",DbType.Int32){Value= userid},
+                new SQLiteParameter("@ipendpoint",DbType.AnsiString){Value = ipendpoint}
+            };
+            command.Parameters.AddRange(parames);
+
             command.ExecuteNonQuery();
         }
         //insert friend info
         public void InsertFriendTable(int userid, int friendid)
         {
-            string sql = "insert into relationinfo (userid,friendid) values (" + userid + "," + friendid + ")";
+            string sql = "insert into relationinfo (userid,friendid) values (@userid,@friendid)";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteParameter[] parames ={
+                new SQLiteParameter("@userid",DbType.Int32){Value= userid},
+                new SQLiteParameter("@friendid",DbType.AnsiString){Value = friendid}
+            };
+            command.Parameters.AddRange(parames);
             command.ExecuteNonQuery();
         }
         //使用sql查询语句，并显示结果
         public bool FindUsers(int userid)
         {
-            string sql = "SELECT 1 from userinfo WHERE userid=@userid";
+            string sql = "SELECT count(0) from userinfo WHERE userid=@userid";
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
             command.Parameters.Add(new SQLiteParameter("@userid", DbType.Int32)
             {
                 Value = userid
             });
-            SQLiteDataReader reader = command.ExecuteReader(System.Data.CommandBehavior.SingleRow);
-            if (reader.HasRows)
-            {
-                //Console.WriteLine("UserID: " + reader["userid"] + "\tName: " + reader["name"]);
-                return true;
-            }
-            return false;
+
+            return command.ExecuteNonQuery() > 0;
+            //SQLiteDataReader reader = command.ExecuteReader(System.Data.CommandBehavior.SingleRow);
+            //if (reader.HasRows)
+            //{
+            //    //Console.WriteLine("UserID: " + reader["userid"] + "\tName: " + reader["name"]);
+            //    return true;
+            //}
+            //return false;
         }
         public bool FindUsers(int userid, out string name)
         {
@@ -175,7 +195,7 @@ namespace ChatOnLineServer
                 Value = userid
             });
             SQLiteDataReader reader = command.ExecuteReader(System.Data.CommandBehavior.SingleRow);
-            if(reader.HasRows)
+            if (reader.HasRows)
             {
                 //Console.WriteLine("UserID: " + reader["userid"] + "\nIPEndPoint: " + reader["ipendpoint"]);
                 return true;
@@ -203,11 +223,17 @@ namespace ChatOnLineServer
             ipendpoint = "";
             return false;
         }
-        public bool FindFriend(int userid, string friendid)
+        public bool FindFriend(int userid, int friendid)
         {
-            string sql = "SELECT * from relationinfo WHERE userid=" + userid + " and friendid=" + friendid;
+            string sql = "SELECT * from relationinfo WHERE userid=@userid and friendid=@friendid";
             int i = 0;
             SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            SQLiteParameter[] parames =
+            {
+                new SQLiteParameter("@userid",DbType.Int32){Value = userid},
+                new SQLiteParameter("@friendid",DbType.Int32){Value = friendid}
+            };
+            command.Parameters.AddRange(parames);
             SQLiteDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
@@ -218,25 +244,43 @@ namespace ChatOnLineServer
             return false;
         }
 
-        //public void FindFriend(string sql, string id, List<int> friendList, string idtype)
-        //{
-        //    sql += id;
-        //    int i = 0;
-        //    int friendid = 0;
-        //    //List<string> temp = new List<string>();
-        //    SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
-        //    SQLiteDataReader reader = command.ExecuteReader();
-        //    while (reader.Read())
-        //    {
-        //        i++;
-        //        friendid = (int)reader[idtype];
-        //        //Console.WriteLine(idtype+":" + reader[idtype]);
-        //        //temp.Add(friendid);
-        //        friendList.Add(friendid);
-        //        //Console.WriteLine("UserID: " + reader["userid"] + "\nIPEndPoint: " + reader["ipendpoint"]);
-        //    }
-        //    //friendList.AddRange(temp);
-        //}
+        [Obsolete("NOT NEED AGAIN")]
+        public List<int> FindFriendUserinfoByFriendId(string id)
+        {
+            //sql += id;
+            //int i = 0;
+            //int friendid = 0;
+            //List<string> temp = new List<string>();
+
+            List<int> friendList = new List<int>();
+            string sql = "SELECT userid from frienduserinfo WHERE friendid=@friendid";
+            SQLiteCommand command = new SQLiteCommand(sql, m_dbConnection);
+            command.Parameters.Add(new SQLiteParameter("@friendid")
+            {
+                Value = id
+            });
+            SQLiteDataAdapter dataAdapter = new SQLiteDataAdapter(command);
+            DataSet dataSet = new DataSet();
+            dataAdapter.Fill(dataSet, "frienduserinfo");
+            var dt = dataSet.Tables[0];
+            foreach (DataRow item in dt.Rows)
+            {
+                friendList.Add(int.Parse(item["userid"].ToString()));
+            }
+
+            return friendList;
+            //SQLiteDataReader reader = command.ExecuteReader();
+            //while (reader.Read())
+            //{
+            //    i++;
+            //    friendid = (int)reader[idtype];
+            //    //Console.WriteLine(idtype+":" + reader[idtype]);
+            //    //temp.Add(friendid);
+            //    friendList.Add(friendid);
+            //    //Console.WriteLine("UserID: " + reader["userid"] + "\nIPEndPoint: " + reader["ipendpoint"]);
+            //}
+            ////friendList.AddRange(temp);
+        }
 
         public List<int> FindFriends(int userid)
         {
